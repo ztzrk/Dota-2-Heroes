@@ -4,15 +4,19 @@ import 'package:mydota/view/screens/home_screen.dart';
 import 'package:mydota/view/screens/splash_screen.dart';
 import 'package:mydota/view/screens/team_screen.dart';
 import 'package:mydota/view_model/list_hero_provider.dart';
+import 'package:mydota/view_model/list_team_provider.dart';
 import 'package:provider/provider.dart';
 
 void main() {
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => HeroProvider(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ListHeroProvider()),
+        ChangeNotifierProvider(create: (_) => ListTeamProvider()),
+      ],
       child: Builder(
         builder: (context) {
-          Provider.of<HeroProvider>(context, listen: false).fetchHeroes();
+          Provider.of<ListHeroProvider>(context, listen: false).fetchHeroes();
           return const MainApp();
         },
       ),

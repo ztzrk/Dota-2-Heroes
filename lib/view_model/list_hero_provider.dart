@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:mydota/model/list_hero_model.dart';
 
-class HeroProvider extends ChangeNotifier {
+class ListHeroProvider extends ChangeNotifier {
   List<ListHeroModel> _heroes = [];
   bool _isLoading = false;
 

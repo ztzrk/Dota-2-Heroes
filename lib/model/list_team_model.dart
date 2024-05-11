@@ -1,9 +1,9 @@
 class ListTeamModel {
-  int? teamId;
-  double? rating;
-  int? wins;
-  int? losses;
-  int? lastMatchTime;
+  num? teamId;
+  num? rating;
+  num? wins;
+  num? losses;
+  num? lastMatchTime;
   String? name;
   String? tag;
   String? logoUrl;

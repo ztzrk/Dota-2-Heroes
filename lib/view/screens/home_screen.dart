@@ -19,7 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     Future.microtask(() {
-      Provider.of<HeroProvider>(context, listen: false).fetchHeroes();
+      Provider.of<ListHeroProvider>(context, listen: false).fetchHeroes();
     });
   }
 
@@ -27,9 +27,9 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const MyAppBar(),
-      body: Consumer<HeroProvider>(
-        builder: (context, heroProvider, _) {
-          if (heroProvider.isLoading && heroProvider.heroes.isEmpty) {
+      body: Consumer<ListHeroProvider>(
+        builder: (context, listHeroProvider, _) {
+          if (listHeroProvider.isLoading && listHeroProvider.heroes.isEmpty) {
             return buildSkeletonLoadingScreen();
           } else {
             return GridView.builder(
@@ -38,12 +38,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 crossAxisSpacing: 12,
                 mainAxisSpacing: 12,
               ),
-              itemCount: heroProvider.heroes.length,
+              itemCount: listHeroProvider.heroes.length,
               shrinkWrap: true,
               physics: const AlwaysScrollableScrollPhysics(),
               padding: const EdgeInsets.only(top: 16, left: 8, right: 8),
               itemBuilder: (BuildContext context, int index) {
-                final hero = heroProvider.heroes[index];
+                final hero = listHeroProvider.heroes[index];
                 return Card(
                   elevation: 4,
                   shape: RoundedRectangleBorder(
