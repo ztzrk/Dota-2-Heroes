@@ -2,24 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:mydota/view/widgets/app_bar.dart';
 import 'package:mydota/view/widgets/bottom_nav.dart';
 import 'package:mydota/view/widgets/skeleton_loading.dart';
-import 'package:mydota/view_model/list_hero_provider.dart';
+import 'package:mydota/view_model/list_player_provider.dart';
 import 'package:provider/provider.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class PlayerScreen extends StatefulWidget {
+  const PlayerScreen({super.key});
 
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  State<PlayerScreen> createState() => _PlayerScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-  final int _selectedIndex = 0;
+class _PlayerScreenState extends State<PlayerScreen> {
+  final int _selectedIndex = 2;
 
   @override
   void initState() {
     super.initState();
     Future.microtask(() {
-      Provider.of<ListHeroProvider>(context, listen: false).fetchHeroes();
+      Provider.of<ListPlayerProvider>(context, listen: false).fetchPlayers();
     });
   }
 
@@ -27,9 +27,9 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const MyAppBar(),
-      body: Consumer<ListHeroProvider>(
-        builder: (context, listHeroProvider, _) {
-          if (listHeroProvider.isLoading && listHeroProvider.heroes.isEmpty) {
+      body: Consumer<ListPlayerProvider>(
+        builder: (context, listTeamProvider, _) {
+          if (listTeamProvider.isLoading && listTeamProvider.players.isEmpty) {
             return buildSkeletonLoadingScreen();
           } else {
             return GridView.builder(
@@ -38,12 +38,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 crossAxisSpacing: 12,
                 mainAxisSpacing: 12,
               ),
-              itemCount: listHeroProvider.heroes.length,
+              itemCount: listTeamProvider.players.length,
               shrinkWrap: true,
               physics: const AlwaysScrollableScrollPhysics(),
               padding: const EdgeInsets.only(top: 16, left: 8, right: 8),
               itemBuilder: (BuildContext context, int index) {
-                final hero = listHeroProvider.heroes[index];
+                final player = listTeamProvider.players[index];
                 return Card(
                   elevation: 4,
                   shape: RoundedRectangleBorder(
@@ -58,13 +58,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(12),
                             child: Image.network(
-                              'https://cdn.dota2.com/apps/dota2/images/heroes/${hero.localizedName?.toLowerCase().replaceAll(' ', '_').replaceAll('-', '') ?? 'unknown'}_vert.jpg',
+                              player.avatarfull ?? '',
                               fit: BoxFit.cover,
                               errorBuilder: (context, error, stackTrace) {
-                                return const Icon(
-                                  Icons.account_circle_rounded,
-                                  color: Colors.grey,
-                                  size: 120,
+                                return Container(
+                                  color: Colors.black,
                                 );
                               },
                             ),
@@ -72,7 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          hero.localizedName ?? '',
+                          player.name ?? '',
                           textAlign: TextAlign.center,
                           style: const TextStyle(
                             fontSize: 16,
