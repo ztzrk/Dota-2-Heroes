@@ -3,6 +3,7 @@ import 'package:mydota/utils/colors.dart';
 import 'package:mydota/view/screens/home_screen.dart';
 import 'package:mydota/view/screens/player_screen.dart';
 import 'package:mydota/view/screens/splash_screen.dart';
+import 'package:mydota/view/screens/team_detail_screen.dart';
 import 'package:mydota/view/screens/team_screen.dart';
 import 'package:mydota/view_model/list_hero_provider.dart';
 import 'package:mydota/view_model/list_player_provider.dart';
@@ -50,6 +51,7 @@ class MainApp extends StatelessWidget {
         '/home': (context) => const HomeScreen(),
         '/team': (context) => const TeamScreen(),
         '/player': (context) => const PlayerScreen(),
+        '/team/detail': (context) => const TeamDetailScreen(),
       },
     );
   }

@@ -17,7 +17,6 @@ class ListTeamProvider extends ChangeNotifier {
         final List<dynamic> responseData = response.data;
         _teams =
             responseData.map((team) => ListTeamModel.fromJson(team)).toList();
-        _teams.sort((a, b) => a.name!.compareTo(b.name!));
       } else {
         throw Exception('Failed to load teams');
       }
