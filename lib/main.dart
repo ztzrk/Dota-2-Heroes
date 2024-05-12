@@ -5,18 +5,21 @@ import 'package:mydota/view/screens/player_screen.dart';
 import 'package:mydota/view/screens/splash_screen.dart';
 import 'package:mydota/view/screens/team_detail_screen.dart';
 import 'package:mydota/view/screens/team_screen.dart';
+import 'package:mydota/view_model/database_helper.dart';
 import 'package:mydota/view_model/list_hero_provider.dart';
 import 'package:mydota/view_model/list_player_provider.dart';
 import 'package:mydota/view_model/list_team_provider.dart';
 import 'package:provider/provider.dart';
 
 void main() {
+  final databaseHelper = DatabaseHelper();
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ListHeroProvider()),
         ChangeNotifierProvider(create: (_) => ListTeamProvider()),
         ChangeNotifierProvider(create: (_) => ListPlayerProvider()),
+        Provider.value(value: databaseHelper),
       ],
       child: Builder(
         builder: (context) {

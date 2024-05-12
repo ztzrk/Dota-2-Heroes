@@ -1,14 +1,14 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:mydota/model/list_team_model.dart';
 import 'package:mydota/model/list_team_players_model.dart';
 import 'package:mydota/model/player_model.dart';
+import 'package:mydota/view_model/database_helper.dart';
 import 'package:mydota/view_model/list_team_players_provider.dart';
 import 'package:mydota/view_model/player_provider.dart';
+import 'package:provider/provider.dart';
 
 class TeamDetailScreen extends StatefulWidget {
-  const TeamDetailScreen({Key? key}) : super(key: key);
+  const TeamDetailScreen({super.key});
 
   @override
   TeamDetailScreenState createState() => TeamDetailScreenState();
@@ -17,12 +17,39 @@ class TeamDetailScreen extends StatefulWidget {
 class TeamDetailScreenState extends State<TeamDetailScreen> {
   late Future<List<ListTeamPlayersModel>> _futureTeamPlayers;
   late ListTeamModel _team;
+  bool _isFavorite = false;
+  late DatabaseHelper _databaseHelper;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _team = ModalRoute.of(context)!.settings.arguments as ListTeamModel;
-    _futureTeamPlayers = fetchTeamPlayers(_team.teamId as int);
+    _databaseHelper = Provider.of<DatabaseHelper>(context, listen: false);
+    _initializeData();
+  }
+
+  Future<void> _initializeData() async {
+    await _databaseHelper.initDatabase();
+    await _fetchTeamPlayersAndCheckFavorite();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _futureTeamPlayers = Future.value([]);
+  }
+
+  Future<void> _fetchTeamPlayersAndCheckFavorite() async {
+    _futureTeamPlayers = fetchTeamPlayers(_team.teamId! as int);
+    await checkIsFavorite();
+  }
+
+  Future<void> checkIsFavorite() async {
+    bool isFavorite =
+        await _databaseHelper.isTeamFavorite(_team.teamId! as int);
+    setState(() {
+      _isFavorite = isFavorite;
+    });
   }
 
   Future<List<ListTeamPlayersModel>> fetchTeamPlayers(int teamId) async {
@@ -37,12 +64,27 @@ class TeamDetailScreenState extends State<TeamDetailScreen> {
     return provider.player;
   }
 
-  double calculateWinProbability(int wins, int losses) {
-    if (wins + losses == 0) {
-      return 0.0;
+  Future<void> toggleFavoriteStatus() async {
+    if (_isFavorite) {
+      await _databaseHelper.removeTeam(_team.teamId as int);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Removed from favorites'),
+          duration: Duration(seconds: 1),
+        ),
+      );
     } else {
-      return wins / (wins + losses);
+      await _databaseHelper.insertTeam(_team);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Added to favorites'),
+          duration: Duration(seconds: 1),
+        ),
+      );
     }
+    setState(() {
+      _isFavorite = !_isFavorite;
+    });
   }
 
   @override
@@ -50,6 +92,15 @@ class TeamDetailScreenState extends State<TeamDetailScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(_team.name ?? ''),
+        actions: [
+          IconButton(
+            icon: Icon(
+              _isFavorite ? Icons.favorite : Icons.favorite_border,
+              color: _isFavorite ? Colors.red : null,
+            ),
+            onPressed: toggleFavoriteStatus,
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(12.0),
@@ -57,7 +108,7 @@ class TeamDetailScreenState extends State<TeamDetailScreen> {
           future: _futureTeamPlayers,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError) {
               return Center(child: Text('Error: ${snapshot.error}'));
             } else {

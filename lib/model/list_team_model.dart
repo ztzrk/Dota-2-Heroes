@@ -18,6 +18,19 @@ class ListTeamModel {
       this.tag,
       this.logoUrl});
 
+  Map<String, dynamic> toMap() {
+    return {
+      'team_id': teamId,
+      'rating': rating,
+      'wins': wins,
+      'losses': losses,
+      'last_match_time': lastMatchTime,
+      'name': name,
+      'tag': tag,
+      'logo_url': logoUrl,
+    };
+  }
+
   ListTeamModel.fromJson(Map<String, dynamic> json) {
     teamId = json['team_id'];
     rating = json['rating'];
