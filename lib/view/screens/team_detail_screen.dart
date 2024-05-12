@@ -3,6 +3,7 @@ import 'package:mydota/model/list_team_model.dart';
 import 'package:mydota/model/list_team_players_model.dart';
 import 'package:mydota/model/player_model.dart';
 import 'package:mydota/view_model/database_helper.dart';
+import 'package:mydota/view_model/database_provider.dart';
 import 'package:mydota/view_model/list_team_players_provider.dart';
 import 'package:mydota/view_model/player_provider.dart';
 import 'package:provider/provider.dart';
@@ -21,34 +22,30 @@ class TeamDetailScreenState extends State<TeamDetailScreen> {
   late DatabaseHelper _databaseHelper;
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _team = ModalRoute.of(context)!.settings.arguments as ListTeamModel;
-    _databaseHelper = Provider.of<DatabaseHelper>(context, listen: false);
-    _initializeData();
-  }
-
-  Future<void> _initializeData() async {
-    await _databaseHelper.initDatabase();
-    await _fetchTeamPlayersAndCheckFavorite();
-  }
-
-  @override
   void initState() {
     super.initState();
     _futureTeamPlayers = Future.value([]);
   }
 
-  Future<void> _fetchTeamPlayersAndCheckFavorite() async {
-    _futureTeamPlayers = fetchTeamPlayers(_team.teamId! as int);
-    await checkIsFavorite();
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _team = ModalRoute.of(context)!.settings.arguments as ListTeamModel;
+    final databaseHelper =
+        Provider.of<DatabaseProvider>(context, listen: false).databaseHelper;
+    _databaseHelper = databaseHelper;
+    _initializeData();
   }
 
-  Future<void> checkIsFavorite() async {
-    bool isFavorite =
-        await _databaseHelper.isTeamFavorite(_team.teamId! as int);
+  Future<void> _initializeData() async {
+    await _databaseHelper.initDatabase();
+    await _fetchTeamPlayers();
+    _isFavorite = await _databaseHelper.isTeamFavorite(_team.teamId! as int);
+  }
+
+  Future<void> _fetchTeamPlayers() async {
     setState(() {
-      _isFavorite = isFavorite;
+      _futureTeamPlayers = fetchTeamPlayers(_team.teamId! as int);
     });
   }
 
@@ -68,7 +65,7 @@ class TeamDetailScreenState extends State<TeamDetailScreen> {
     if (_isFavorite) {
       await _databaseHelper.removeTeam(_team.teamId as int);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Removed from favorites'),
           duration: Duration(seconds: 1),
         ),
@@ -76,7 +73,7 @@ class TeamDetailScreenState extends State<TeamDetailScreen> {
     } else {
       await _databaseHelper.insertTeam(_team);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Added to favorites'),
           duration: Duration(seconds: 1),
         ),
@@ -125,14 +122,14 @@ class TeamDetailScreenState extends State<TeamDetailScreen> {
                       fit: BoxFit.cover,
                       errorBuilder: (BuildContext context, Object exception,
                           StackTrace? stackTrace) {
-                        return Placeholder(
+                        return const Placeholder(
                           fallbackHeight: 200,
                           fallbackWidth: 200,
                           color: Colors.black,
                         );
                       },
                     ),
-                  SizedBox(height: 12),
+                  const SizedBox(height: 12),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -142,7 +139,7 @@ class TeamDetailScreenState extends State<TeamDetailScreen> {
                           Text(
                             'Wins: ${_team.wins}',
                             textAlign: TextAlign.left,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
                             ),
@@ -150,7 +147,7 @@ class TeamDetailScreenState extends State<TeamDetailScreen> {
                           Text(
                             'Losses: ${_team.losses}',
                             textAlign: TextAlign.left,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
                             ),
@@ -159,10 +156,10 @@ class TeamDetailScreenState extends State<TeamDetailScreen> {
                       ),
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 16,
                   ),
-                  Text(
+                  const Text(
                     'Team Member',
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
                   ),
@@ -217,7 +214,7 @@ class TeamDetailScreenState extends State<TeamDetailScreen> {
                               return const SizedBox();
                             },
                           )
-                        : Center(
+                        : const Center(
                             child: Text(
                               'This team is disbanded',
                               style: TextStyle(fontSize: 18),

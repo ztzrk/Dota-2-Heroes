@@ -19,36 +19,29 @@ class DatabaseHelper {
   }
 
   Future<Database> initDatabase() async {
-    final path = join(await getDatabasesPath(), 'my_database.db');
     _database = await openDatabase(
-      path,
-      version: 1,
+      join(await getDatabasesPath(), 'my_database.db'),
       onCreate: (db, version) async {
-        try {
-          await db.execute('''
-          CREATE TABLE teams(
-            team_id INTEGER PRIMARY KEY,
-            rating REAL,
-            wins INTEGER,
-            losses INTEGER,
-            last_match_time INTEGER,
-            name TEXT,
-            tag TEXT,
-            logo_url TEXT
-          )
-        ''');
-        } catch (e) {
-          print('Error creating tables: $e');
-        }
+        await db.execute('''CREATE TABLE teams(
+              team_id INTEGER, 
+              rating DOUBLE, 
+              wins INTEGER, 
+              losses INTEGER, 
+              last_match_time INTEGER, 
+              name TEXT, 
+              tag TEXT, 
+              logo_url TEXT)
+              ''');
       },
+      version: 1,
     );
     return _database;
   }
 
   Future<bool> isTeamFavorite(int teamId) async {
     final db = await database;
-    final count = Sqflite.firstIntValue(
-        await db.rawQuery('SELECT COUNT(*) FROM teams WHERE id = ?', [teamId]));
+    final count = Sqflite.firstIntValue(await db
+        .rawQuery('SELECT COUNT(*) FROM teams WHERE team_id = $teamId'));
     return count! > 0;
   }
 
@@ -57,9 +50,7 @@ class DatabaseHelper {
   ) async {
     final db = await database;
     try {
-      print(team.toMap());
-      await db.insert('teams', team.toMap(),
-          conflictAlgorithm: ConflictAlgorithm.replace);
+      await db.insert('teams', team.toMap());
     } catch (e) {
       print('Error inserting team: $e');
     }
@@ -67,7 +58,7 @@ class DatabaseHelper {
 
   Future<void> removeTeam(int teamId) async {
     final db = await database;
-    await db.delete('teams', where: 'id = ?', whereArgs: [teamId]);
+    await db.delete('teams', where: 'team_id = ?', whereArgs: [teamId]);
   }
 
   Future<List<ListTeamModel>> getTeams() async {

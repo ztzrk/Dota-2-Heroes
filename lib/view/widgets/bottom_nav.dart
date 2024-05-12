@@ -20,6 +20,9 @@ class MyBottomNavigationBar extends StatelessWidget {
       case 2:
         Navigator.pushNamed(context, '/player');
         break;
+      case 3:
+        Navigator.pushNamed(context, '/fav');
+        break;
     }
   }
 

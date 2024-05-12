@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:mydota/utils/colors.dart';
+import 'package:mydota/view/screens/favorite_screen.dart';
 import 'package:mydota/view/screens/home_screen.dart';
 import 'package:mydota/view/screens/player_screen.dart';
 import 'package:mydota/view/screens/splash_screen.dart';
 import 'package:mydota/view/screens/team_detail_screen.dart';
 import 'package:mydota/view/screens/team_screen.dart';
-import 'package:mydota/view_model/database_helper.dart';
+import 'package:mydota/view_model/database_provider.dart';
 import 'package:mydota/view_model/list_hero_provider.dart';
 import 'package:mydota/view_model/list_player_provider.dart';
 import 'package:mydota/view_model/list_team_provider.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  final databaseHelper = DatabaseHelper();
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ListHeroProvider()),
         ChangeNotifierProvider(create: (_) => ListTeamProvider()),
         ChangeNotifierProvider(create: (_) => ListPlayerProvider()),
-        Provider.value(value: databaseHelper),
+        ChangeNotifierProvider(create: (_) => DatabaseProvider()),
       ],
       child: Builder(
         builder: (context) {
@@ -55,6 +55,7 @@ class MainApp extends StatelessWidget {
         '/team': (context) => const TeamScreen(),
         '/player': (context) => const PlayerScreen(),
         '/team/detail': (context) => const TeamDetailScreen(),
+        '/fav': (context) => const FavoriteScreen(),
       },
     );
   }
