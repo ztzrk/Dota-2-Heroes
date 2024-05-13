@@ -19,7 +19,7 @@ Dota database app.
 
 ## Sample App Demo
 
-[Apk Download Link](https://drive.google.com/file/d/1JjTrCrIXh-887QVauUyLYqi0X2E7btaI/view?usp=drive_link)
+[Apk Download Link](https://drive.google.com/file/d/1sEQi7nhDOb0Vfk1dFzPzRR5RkCLtBvUX/view?usp=sharing)
 
 ## Setup
 
