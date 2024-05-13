@@ -73,7 +73,7 @@ class PlayerScreenState extends State<PlayerScreen> {
                           _searchController.text, listTeamProvider.players);
 
                   if (players.isEmpty) {
-                    return Center(
+                    return const Center(
                       child: Text('No players found'),
                     );
                   }
