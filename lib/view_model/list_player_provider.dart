@@ -5,6 +5,7 @@ import 'package:mydota/model/list_player_model.dart';
 class ListPlayerProvider extends ChangeNotifier {
   List<ListPlayerModel> _players = [];
   bool _isLoading = false;
+  List<ListPlayerModel> _filteredPlayers = [];
 
   List<ListPlayerModel> get players => _players;
   bool get isLoading => _isLoading;
@@ -20,6 +21,8 @@ class ListPlayerProvider extends ChangeNotifier {
             .map((player) => ListPlayerModel.fromJson(player))
             .toList();
         _players.sort((a, b) => a.name!.compareTo(b.name!));
+
+        _filteredPlayers = List.of(_players);
       } else {
         throw Exception('Failed to load players');
       }
@@ -29,5 +32,16 @@ class ListPlayerProvider extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  List<ListPlayerModel> getFilteredPlayers(String query) {
+    if (query.isEmpty) {
+      return List.of(_players);
+    }
+
+    return _players.where((player) {
+      final name = player.name ?? '';
+      return name.toLowerCase().contains(query.toLowerCase());
+    }).toList();
   }
 }
