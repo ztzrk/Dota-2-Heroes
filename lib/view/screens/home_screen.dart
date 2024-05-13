@@ -4,7 +4,7 @@ import 'package:mydota/view/widgets/bottom_nav.dart';
 import 'package:mydota/view/widgets/hero_filter_chip.dart';
 import 'package:mydota/view/widgets/heroes_grid_view.dart';
 import 'package:mydota/view/widgets/skeleton_loading.dart';
-import 'package:mydota/view_model/list_hero_provider.dart';
+import 'package:mydota/view_model/provider/list_hero_provider.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mydota/view_model/list_hero_provider.dart';
+import 'package:mydota/view_model/provider/list_hero_provider.dart';
 
 class HeroFilter extends StatelessWidget {
   final ListHeroProvider listHeroProvider;

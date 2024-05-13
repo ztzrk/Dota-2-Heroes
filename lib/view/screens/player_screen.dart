@@ -3,7 +3,7 @@ import 'package:mydota/model/list_player_model.dart';
 import 'package:mydota/view/widgets/app_bar.dart';
 import 'package:mydota/view/widgets/bottom_nav.dart';
 import 'package:mydota/view/widgets/skeleton_loading.dart';
-import 'package:mydota/view_model/list_player_provider.dart';
+import 'package:mydota/view_model/provider/list_player_provider.dart';
 import 'package:provider/provider.dart';
 
 class PlayerScreen extends StatefulWidget {

@@ -6,10 +6,10 @@ import 'package:mydota/view/screens/player_screen.dart';
 import 'package:mydota/view/screens/splash_screen.dart';
 import 'package:mydota/view/screens/team_detail_screen.dart';
 import 'package:mydota/view/screens/team_screen.dart';
-import 'package:mydota/view_model/database_provider.dart';
-import 'package:mydota/view_model/list_hero_provider.dart';
-import 'package:mydota/view_model/list_player_provider.dart';
-import 'package:mydota/view_model/list_team_provider.dart';
+import 'package:mydota/view_model/provider/database_provider.dart';
+import 'package:mydota/view_model/provider/list_hero_provider.dart';
+import 'package:mydota/view_model/provider/list_player_provider.dart';
+import 'package:mydota/view_model/provider/list_team_provider.dart';
 import 'package:provider/provider.dart';
 
 void main() {

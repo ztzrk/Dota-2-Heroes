@@ -3,9 +3,9 @@ import 'package:mydota/model/list_team_model.dart';
 import 'package:mydota/model/list_team_players_model.dart';
 import 'package:mydota/model/player_model.dart';
 import 'package:mydota/view_model/database_helper.dart';
-import 'package:mydota/view_model/database_provider.dart';
-import 'package:mydota/view_model/list_team_players_provider.dart';
-import 'package:mydota/view_model/player_provider.dart';
+import 'package:mydota/view_model/provider/database_provider.dart';
+import 'package:mydota/view_model/provider/list_team_players_provider.dart';
+import 'package:mydota/view_model/provider/player_provider.dart';
 import 'package:provider/provider.dart';
 
 class TeamDetailScreen extends StatefulWidget {
@@ -64,20 +64,24 @@ class TeamDetailScreenState extends State<TeamDetailScreen> {
   Future<void> toggleFavoriteStatus() async {
     if (_isFavorite) {
       await _databaseHelper.removeTeam(_team.teamId as int);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Removed from favorites'),
-          duration: Duration(seconds: 1),
-        ),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Removed from favorites'),
+            duration: Duration(seconds: 1),
+          ),
+        );
+      }
     } else {
       await _databaseHelper.insertTeam(_team);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Added to favorites'),
-          duration: Duration(seconds: 1),
-        ),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Added to favorites'),
+            duration: Duration(seconds: 1),
+          ),
+        );
+      }
     }
     setState(() {
       _isFavorite = !_isFavorite;
