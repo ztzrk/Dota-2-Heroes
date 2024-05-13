@@ -8,13 +8,16 @@ class DatabaseHelper {
 
   factory DatabaseHelper() => _instance;
 
-  DatabaseHelper._internal();
+  DatabaseHelper._internal() {
+    initDatabase();
+  }
 
   Future<Database> get database async {
     if (_database.isOpen) {
       return _database;
     } else {
-      return await initDatabase();
+      _database = await initDatabase();
+      return _database;
     }
   }
 
