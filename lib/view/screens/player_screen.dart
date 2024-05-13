@@ -72,6 +72,12 @@ class PlayerScreenState extends State<PlayerScreen> {
                       : _filterPlayers(
                           _searchController.text, listTeamProvider.players);
 
+                  if (players.isEmpty) {
+                    return Center(
+                      child: Text('No players found'),
+                    );
+                  }
+
                   return GridView.builder(
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(

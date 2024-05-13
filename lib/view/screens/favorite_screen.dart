@@ -34,7 +34,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
     return Scaffold(
       appBar: const MyAppBar(),
       body: _favoriteTeams.isEmpty
-          ? Center(
+          ? const Center(
               child: Text('No favorite teams found.'),
             )
           : GridView.builder(
